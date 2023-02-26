@@ -21,6 +21,7 @@
   "homepage": "https://github.com/DouglasLeal/chat-node-socket-io#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "ejs": "^3.1.8",
     "express": "^4.18.2",
     "socket.io": "^4.6.1"
   }
