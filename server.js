@@ -20,18 +20,39 @@ const io = new Server(server, {
     }
 });
 
-
 app.get("/", (req, res) => {
     res.render("index");
 })
 
-io.on('connection', (socket) => {
-    console.log("Nova conexão");
+//-------------------------------
 
-    socket.emit("hello", "Seja bem-vindo");
-    socket.on("hello", (arg) => {
-        console.log(arg);
+let mensagens = [];
+let usuarios = [];
+
+io.on('connection', (socket) => {
+    socket.on("usuarioConectado", (dados) => {
+        if(usuarios.indexOf(dados) < 0){
+            usuarios.push(dados);
+            io.emit("usuarios", usuarios);
+
+            usuarios.sort();
+        }       
     });
+
+    socket.on("mudarNomeUsuario", (dados) => {
+        usuarios.splice(usuarios.indexOf(dados.antigo), 1);
+        usuarios.push(dados.novo);
+        io.emit("usuarios", usuarios);     
+    });
+
+    socket.on("mensagem", (dados) => {
+        mensagens.push(dados);
+
+        io.emit("mensagens", mensagens);
+    });
+
+    io.emit("usuarios", usuarios);
+    io.emit("mensagens", mensagens);
 });
 
 const PORT = process.env.PORT || 3000;

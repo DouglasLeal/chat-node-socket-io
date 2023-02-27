@@ -1,7 +1,23 @@
 body{
     height: 100vh;
+    position: relative;
 }
 
 .chat{
     height: 80%;
+}
+
+.btn-salvar-usuario{
+    display: block;
+    margin: 0 auto;
+}
+
+.btn-mudar-nome{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.d-none{
+    display: none;
 }
