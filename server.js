@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 const app = express();
 
@@ -24,35 +24,65 @@ app.get("/", (req, res) => {
     res.render("index");
 })
 
+app.get("/sala-csharp", (req, res) => {
+    res.render("sala-csharp");
+})
+
+app.get("/sala-js", (req, res) => {
+    res.render("sala-js");
+})
+
 //-------------------------------
 
-let mensagens = [];
-let usuarios = [];
+let mensagens = { csharp: [], js: [] };
+let usuarios = { csharp: [], js: [] };
 
-io.on('connection', (socket) => {
+const csharp = io.of("/sala-csharp").on('connection', (socket) => {
     socket.on("usuarioConectado", (dados) => {
-        if(usuarios.indexOf(dados) < 0){
-            usuarios.push(dados);
-            io.emit("usuarios", usuarios);
+        if (usuarios.csharp.indexOf(dados) < 0) {
+            usuarios.csharp.push(dados);
 
-            usuarios.sort();
-        }       
+            usuarios.csharp.sort();
+        }
+
+        csharp.emit("usuarios", usuarios.csharp);
     });
 
     socket.on("mudarNomeUsuario", (dados) => {
-        usuarios.splice(usuarios.indexOf(dados.antigo), 1);
-        usuarios.push(dados.novo);
-        io.emit("usuarios", usuarios);     
+        usuarios.csharp.splice(usuarios.indexOf(dados.antigo), 1);
+        usuarios.csharp.push(dados.novo);
+        csharp.emit("usuarios", usuarios);
     });
 
     socket.on("mensagem", (dados) => {
-        mensagens.push(dados);
+        mensagens.csharp.push(dados);
 
-        io.emit("mensagens", mensagens);
+        csharp.emit("mensagens", mensagens.csharp);
+    });
+});
+
+const js = io.of("/sala-js").on('connection', (socket) => {
+    socket.on("usuarioConectado", (dados) => {
+        if (usuarios.js.indexOf(dados) < 0) {
+            usuarios.js.push(dados);
+
+            usuarios.js.sort();
+        }
+
+        js.emit("usuarios", usuarios.js);
     });
 
-    io.emit("usuarios", usuarios);
-    io.emit("mensagens", mensagens);
+    socket.on("mudarNomeUsuario", (dados) => {
+        usuarios.js.splice(usuarios.indexOf(dados.antigo), 1);
+        usuarios.js.push(dados.novo);
+        js.emit("usuarios", usuarios);
+    });
+
+    socket.on("mensagem", (dados) => {
+        mensagens.js.push(dados);
+
+        js.emit("mensagens", mensagens.js);
+    });
 });
 
 const PORT = process.env.PORT || 3000;

@@ -1,0 +1,48 @@
+<%- include('partials/header'); -%>
+
+<body class="has-background-grey-lighter">
+    <button class="btn-mudar-nome button is-link">Mudar Nome</button>
+    <h1 class="has-text-centered title is-1">JS - Chat!</h1>
+
+    <div class="chat columns">
+        <div class="mensagens column card ml-5">
+            <!-- MENSAGENS -->            
+        </div>
+        <div class="usuarios column is-2 card mx-5">
+            <h2 class="has-text-centered title is-5">Usuários</h2>
+            <ul class="usuarios-lista">
+                <!-- USUÁRIOS -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="field has-addons mx-5 mt-5">
+        <div class="control is-expanded ">
+            <input class="input-mensagem input is-large" type="text" placeholder="Mensagem...">
+        </div>
+        <div class="control">
+            <a class="btn-enviar button is-info is-large">
+                Enviar
+            </a>
+        </div>
+    </div>
+
+    <div class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                <h3 class="has-text-centered title is-5">Nome de Usuário</h3>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input nome-usuario" type="text">
+                        <p class="help-nome-usuario help is-danger d-none">O nome não pode ter menos de 3 caracteres.</p>                        
+                    </div>
+                </div>
+
+                <button class="btn-salvar-usuario button is-info is-centered">Salvar</button>
+            </section>
+        </div>
+    </div>
+
+<%- include('partials/footer'); -%>

@@ -1,5 +1,8 @@
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
-const socket = io();
+const room = window.location.pathname.replace("/", "");
+const socket = io(`localhost:3000/${room}`);
+
+console.log(room)
 
 let modal = document.querySelector(".modal");
 let btnSalvarUsuario = document.querySelector(".btn-salvar-usuario");
