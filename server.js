@@ -38,20 +38,24 @@ let mensagens = { csharp: [], js: [] };
 let usuarios = { csharp: [], js: [] };
 
 const csharp = io.of("/sala-csharp").on('connection', (socket) => {
-    socket.on("usuarioConectado", (dados) => {
-        if (usuarios.csharp.indexOf(dados) < 0) {
-            usuarios.csharp.push(dados);
+    socket.on("usuarioConectado", (nome) => {
+        let id = socket.id;
 
-            usuarios.csharp.sort();
-        }
+        usuarios.csharp.push({ id, nome});
 
         csharp.emit("usuarios", usuarios.csharp);
+        csharp.emit("mensagens", mensagens.csharp);
     });
 
     socket.on("mudarNomeUsuario", (dados) => {
-        usuarios.csharp.splice(usuarios.indexOf(dados.antigo), 1);
-        usuarios.csharp.push(dados.novo);
-        csharp.emit("usuarios", usuarios);
+        let id = socket.id;
+
+        usuarios.csharp.forEach((u, index) => {
+            if (u.id == id) {
+                usuarios.csharp[index].nome = dados;
+            }            
+        })
+        csharp.emit("usuarios", usuarios.csharp);
     });
 
     socket.on("mensagem", (dados) => {
@@ -59,29 +63,57 @@ const csharp = io.of("/sala-csharp").on('connection', (socket) => {
 
         csharp.emit("mensagens", mensagens.csharp);
     });
+
+    socket.on("disconnect", () => {        
+        let id = socket.id;
+
+        usuarios.csharp.forEach((u, index) => {
+            if (u.id == id) {
+                usuarios.csharp.splice(index, 1);
+            }
+        })
+
+        csharp.emit("usuarios", usuarios.csharp);
+    });
 });
 
 const js = io.of("/sala-js").on('connection', (socket) => {
-    socket.on("usuarioConectado", (dados) => {
-        if (usuarios.js.indexOf(dados) < 0) {
-            usuarios.js.push(dados);
+    socket.on("usuarioConectado", (nome) => {
+        let id = socket.id;
 
-            usuarios.js.sort();
-        }
+        usuarios.js.push({ id, nome});
 
         js.emit("usuarios", usuarios.js);
+        js.emit("mensagens", mensagens.js);
     });
 
     socket.on("mudarNomeUsuario", (dados) => {
-        usuarios.js.splice(usuarios.indexOf(dados.antigo), 1);
-        usuarios.js.push(dados.novo);
-        js.emit("usuarios", usuarios);
+        let id = socket.id;
+
+        usuarios.js.forEach((u, index) => {
+            if (u.id == id) {
+                usuarios.js[index].nome = dados;
+            }            
+        })
+        js.emit("usuarios", usuarios.js);
     });
 
     socket.on("mensagem", (dados) => {
         mensagens.js.push(dados);
 
         js.emit("mensagens", mensagens.js);
+    });
+
+    socket.on("disconnect", () => {        
+        let id = socket.id;
+
+        usuarios.js.forEach((u, index) => {
+            if (u.id == id) {
+                usuarios.js.splice(index, 1);
+            }
+        })
+
+        js.emit("usuarios", usuarios.js);
     });
 });
 

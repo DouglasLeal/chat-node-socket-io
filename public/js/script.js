@@ -2,8 +2,6 @@ import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 const room = window.location.pathname.replace("/", "");
 const socket = io(`localhost:3000/${room}`);
 
-console.log(room)
-
 let modal = document.querySelector(".modal");
 let btnSalvarUsuario = document.querySelector(".btn-salvar-usuario");
 let btnEnviar = document.querySelector(".btn-enviar");
@@ -23,18 +21,13 @@ if(localStorage.getItem("mychat-nome-usuario")){
 }
 
 function salvarNome(nome){
-    let nomeAntigo = nomeUsuario;
     localStorage.setItem("mychat-nome-usuario", nome);
-    nomeUsuario = nome;
 
-    if(nome == null){
-        socket.emit("usuarioConectado", nomeUsuario);
+    if(nomeUsuario == null){
+        socket.emit("usuarioConectado", nome);
     }else{
-        socket.emit("mudarNomeUsuario", {
-            antigo: nomeAntigo,
-            novo: nomeUsuario
-        });
-    }
+        socket.emit("mudarNomeUsuario", nome);
+    }    
 }
 
 btnMudarNome.onclick = () => {
@@ -98,7 +91,7 @@ socket.on("usuarios", (dados) => {
         let usuario = document.createElement("li");
         usuario.classList.add("has-text-weight-bold");
         usuario.classList.add("mb-3");
-        usuario.innerText = e;
+        usuario.innerText = e.nome;
 
         usuariosDiv.appendChild(usuario);
     });
