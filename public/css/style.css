@@ -12,11 +12,9 @@ body{
     margin: 0 auto;
 }
 
-/* .btn-mudar-nome{
-    position: absolute;
-    top: 15px;
-    right: 15px;
-} */
+.mensagens, .usuarios{
+    overflow-y: auto;
+}
 
 .d-none{
     display: none;

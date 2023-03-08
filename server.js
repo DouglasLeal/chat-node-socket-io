@@ -59,6 +59,10 @@ const csharp = io.of("/sala-csharp").on('connection', (socket) => {
     });
 
     socket.on("mensagem", (dados) => {
+        if(mensagens.csharp.length == 100){
+            mensagens.js.shift();
+        }
+
         mensagens.csharp.push(dados);
 
         csharp.emit("mensagens", mensagens.csharp);
@@ -99,6 +103,10 @@ const js = io.of("/sala-js").on('connection', (socket) => {
     });
 
     socket.on("mensagem", (dados) => {
+        if(mensagens.js.length == 100){
+            mensagens.js.shift();
+        }
+
         mensagens.js.push(dados);
 
         js.emit("mensagens", mensagens.js);
